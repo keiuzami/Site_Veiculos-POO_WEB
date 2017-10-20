@@ -5,12 +5,13 @@
     string veiculoId = Request.QueryString["Id"];
     var db = WebMatrix.Data.Database.Open("dbVeiculos");
     var fabricantes = db.Query("SELECT * FROM FABRICANTE");
-    if (string.IsNullOrEmpty(veiculoId))
+    string nome = "", modelo = "", ano = "", imagem = "", precoMedio = "", fabricante = "", Id="";
+    if (string.IsNullOrEmpty(veiculoId) && !IsPost)
     {
         erro = true;
         Response.Redirect("/");
     }
-    else
+    else if(!IsPost)
     {
         veiculo = db.QuerySingle("SELECT v.*, f.Nome 'FabricanteNome' from Veiculo v inner join Fabricante f on v.Fabricante_id = f.Id where v.id = @0", veiculoId);
         if (veiculo == null)
@@ -19,7 +20,16 @@
             Response.StatusCode = 404;
             mensagem = "Veículo não encontrado";
         }
-        db.Close();
+        else
+        {
+            Id = veiculo.Id.ToString();
+            nome = veiculo.Nome.ToString();
+            modelo = veiculo.Modelo.ToString();
+            fabricante = veiculo.Fabricante_Id.ToString();
+            ano = veiculo.Ano.ToString();
+            imagem = veiculo.Imagem.ToString();
+            precoMedio = veiculo.PrecoMedio.ToString();
+        }
 
     }
 
