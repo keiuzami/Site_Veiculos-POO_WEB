@@ -3,6 +3,8 @@
     bool erro = false;
     string mensagem = string.Empty;
     string veiculoId = Request.QueryString["Id"];
+    var db = WebMatrix.Data.Database.Open("dbVeiculos");
+    var fabricantes = db.Query("SELECT * FROM FABRICANTE");
     if (string.IsNullOrEmpty(veiculoId))
     {
         erro = true;
