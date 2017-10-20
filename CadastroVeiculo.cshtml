@@ -64,7 +64,14 @@
         <select name="Fabricante_Id">
             @foreach (var fabricante in fabricantes)
             {
-                <option value="@fabricante.Id">@fabricante.Nome</option>
+                if (fabricante.Id.ToString() == Request.Form["Fabricante_Id"])
+                {
+                    <option value="@fabricante.Id" selected="selected">@fabricante.Nome</option>
+                }
+                else
+                {
+                    <option value="@fabricante.Id">@fabricante.Nome</option>
+                }
             }
         </select>
     </div>
