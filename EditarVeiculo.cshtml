@@ -12,7 +12,7 @@
     }
     else
     {
-        veiculo = db.QuerySingle("SELECT v.*, f.* from Veiculo v inner join Fabricante f on v.Fabricante_id = f.Id where v.id = @0", veiculoId);
+        veiculo = db.QuerySingle("SELECT v.*, f.Nome 'FabricanteNome' from Veiculo v inner join Fabricante f on v.Fabricante_id = f.Id where v.id = @0", veiculoId);
         if (veiculo == null)
         {
             erro = true;
