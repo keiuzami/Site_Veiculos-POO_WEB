@@ -14,6 +14,8 @@ inner join Fabricante f on v.Fabricante_Id = f.Id");
             <th>Fabricante</th>
             <th>Ano</th>
             <th>Preço FIP</th>
+            <th>Detalhes</th>
+            <th>Editar</th>
         </tr>
     </thead>
     <tbody>
@@ -37,6 +39,7 @@ inner join Fabricante f on v.Fabricante_Id = f.Id");
                         <td>@carro.PrecoMedio</td>
 
                         <td><a href="VeiculoDetalhe?Id=@carro.Id">Detalhes </a></td>
+                        <td><a href="EditarVeiculo?Id=@carro.Id">Editar </a></td>
                     </tr>  
 
         
