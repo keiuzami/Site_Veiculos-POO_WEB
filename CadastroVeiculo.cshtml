@@ -2,7 +2,14 @@
     var db = WebMatrix.Data.Database.Open("dbVeiculos");
     var message = "";
     var fabricantes = db.Query("SELECT * FROM FABRICANTE");
-    if (IsPost)
+    Validation.RequireField("Nome", "Nome é obrigatório!");
+    Validation.RequireField("Modelo", "Modelo é obrigatório!");
+    Validation.RequireField("Fabricante_Id", "Fabricane é obrigatório!");
+    Validation.RequireField("Fabricante_Id", "Fabricane é obrigatório!");
+    Validation.RequireField("Ano", "Ano é obrigatório!");
+    Validation.RequireField("Imagem", "Imagem é obrigatório!");
+    Validation.RequireField("PrecoMedio", "Preço Médio é obrigatório!");
+    if (IsPost && Validation.IsValid())
     {
         try
         {
@@ -30,6 +37,7 @@
             message = "Ocorreu um erro, tente novamente.";
         }
     }
+    db.Close();
 }
 <!DOCTYPE html>
 <html>
@@ -37,6 +45,7 @@
         <title></title>
     </head>
 <body>
+@Html.ValidationSummary()
 <p>@message</p>
 <form method="post" action="CadastroVeiculo.cshtml">
     <div>
@@ -45,7 +54,7 @@
     </div>
     <div>
         <label>Modelo:</label>
-        <input type="text" value="" name="Modelo"/>
+        <input type="text" value="@Request.Form["Modelo"]" name="Modelo"/>
     </div>
     <div>
         <label>Fabricante:</label>
@@ -55,21 +64,28 @@
         <select name="Fabricante_Id">
             @foreach (var fabricante in fabricantes)
             {
-                <option value="@fabricante.Id">@fabricante.Nome</option>
+                if (fabricante.Id.ToString() == Request.Form["Fabricante_Id"])
+                {
+                    <option value="@fabricante.Id" selected="selected">@fabricante.Nome</option>
+                }
+                else
+                {
+                    <option value="@fabricante.Id">@fabricante.Nome</option>
+                }
             }
         </select>
     </div>
     <div>
         <label>Ano:</label>
-        <input type="text" value="" name="Ano"/>
+        <input type="text" value="@Request.Form["Ano"]" name="Ano"/>
     </div>
     <div>
         <label>Imagem:</label>
-        <input type="text" value="" name="Imagem"/>
+        <input type="text" value="@Request.Form["Imagem"]" name="Imagem"/>
     </div>
     <div>
         <label>Preço Médio:</label>
-        <input type="text" value="" name="PrecoMedio"/>
+        <input type="text" value="@Request.Form["PrecoMedio"]" name="PrecoMedio"/>
     </div>
     <div>
         <button type="submit">Enviar</button>
