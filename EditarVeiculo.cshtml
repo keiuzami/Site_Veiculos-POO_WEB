@@ -11,8 +11,17 @@
     else
     {
         var db = WebMatrix.Data.Database.Open("dbVeiculos");
+        veiculo = db.QuerySingle("SELECT v.*, f.* from Veiculo v inner join Fabricante f on v.Fabricante_id = f.Id where v.id = @0", veiculoId);
+        if (veiculo == null)
+        {
+            erro = true;
+            Response.StatusCode = 404;
+            mensagem = "Veículo não encontrado";
+        }
+        db.Close();
+
     }
-  
+
     var message = "";
     Validation.RequireField("Nome", "Nome é obrigatório!");
     Validation.RequireField("Modelo", "Modelo é obrigatório!");
@@ -34,22 +43,12 @@
             precoMedio = Request.Form["PrecoMedio"];
             var preco = 0.0;
             preco = Convert.ToDouble(precoMedio);
-            var resultado = db.Execute("INSERT INTO VEICULO(Nome,Modelo,Fabricante_id,Ano,Imagem,PrecoMedio)values(@0,@1,@2,@3,@4,@5)", nome, modelo, fabricante, ano, imagem, precoMedio);
-            if (resultado==0)
-            {
-                message = "Ocorreu um erro, tente novamente.";
-            }
-            else
-            {
-                Response.Redirect("/");
-            }
         }
         catch (Exception e)
         {
             message = "Ocorreu um erro, tente novamente.";
         }
     }
-    db.Close();
 }
 <!DOCTYPE html>
 <html>
