@@ -54,7 +54,7 @@
     </div>
     <div>
         <label>Modelo:</label>
-        <input type="text" value="" name="Modelo"/>
+        <input type="text" value="@Request.Form["Modelo"]" name="Modelo"/>
     </div>
     <div>
         <label>Fabricante:</label>
@@ -70,15 +70,15 @@
     </div>
     <div>
         <label>Ano:</label>
-        <input type="text" value="" name="Ano"/>
+        <input type="text" value="@Request.Form["Ano"]" name="Ano"/>
     </div>
     <div>
         <label>Imagem:</label>
-        <input type="text" value="" name="Imagem"/>
+        <input type="text" value="@Request.Form["Imagem"]" name="Imagem"/>
     </div>
     <div>
         <label>Preço Médio:</label>
-        <input type="text" value="" name="PrecoMedio"/>
+        <input type="text" value="@Request.Form["PrecoMedio"]" name="PrecoMedio"/>
     </div>
     <div>
         <button type="submit">Enviar</button>
