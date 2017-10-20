@@ -45,7 +45,7 @@
     {
         try
         {
-            string nome, modelo, ano, imagem, precoMedio,fabricante;
+            Id = Request.Form["Id"];
             nome = Request.Form["Nome"];
             modelo = Request.Form["Modelo"];
             fabricante = Request.Form["Fabricante_id"];
@@ -70,6 +70,7 @@
 @Html.ValidationSummary()
 <p>@message</p>
 <form method="post" action="CadastroVeiculo.cshtml">
+    <input name="Id" hidden="hidden" value="@Id"/>
     <div>
         <label>Nome:</label>
         <input type="text" value="@veiculo.Nome" name="Nome"/>
