@@ -69,6 +69,18 @@
             message = "Ocorreu um erro, tente novamente.";
         }
     }
+    else if (IsPost && !Validation.IsValid())
+    {
+        Id = Request.Form["Id"];
+        nome = Request.Form["Nome"];
+        modelo = Request.Form["Modelo"];
+        fabricante = Request.Form["Fabricante_id"];
+        ano = Request.Form["Ano"];
+        imagem = Request.Form["Imagem"];
+        precoMedio = Request.Form["PrecoMedio"];
+        var preco = 0.0;
+        preco = Convert.ToDouble(precoMedio);
+    }
     db.Close();
 }
 <!DOCTYPE html>
