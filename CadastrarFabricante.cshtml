@@ -1,0 +1,35 @@
+﻿@{
+    var result = "";
+    Validation.RequireField("Nome", "Nome é obrigatório!");
+    Validation.Add("Nome", Validator.StringLength(80));
+    if (IsPost && Validation.IsValid())
+    {
+        var db = WebMatrix.Data.Database.Open("dbVeiculos");
+        var nomeFabricante = Request.Form["Nome"].ToString();
+        var r = db.Execute("INSERT INTO FABRICANTE(Nome) VALUES (@0);",nomeFabricante);
+        if (r==0)
+        {
+            result = "Ocorreu um erro, tente novamente. /n Código do erro: Usuário mt burro, ce loco.";
+        }
+        else
+        {
+            Response.Redirect("/");
+        }
+        db.Close();
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cadastrar Fabricante</title>
+    </head>
+<body>
+@Html.ValidationSummary()
+<p>@result</p>
+<form action="CadastrarFabricante.cshtml" method="post">
+    <label>Nome do fabricante:</label>
+    <input type="text" name="Nome" value="@Request.Form["Nome"]"/>
+    <button type="submit">Cadastrar</button>
+</form>
+</body>
+</html>

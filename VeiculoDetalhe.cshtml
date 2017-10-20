@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+    Page.Title = "Concessionária Fulano";
+
+
+    dynamic veiculo = null;
+    bool erro = false;
+    string mensagem = String.Empty;
+    string veiculoId = Request.QueryString["Id"];
+
+    if (String.IsNullOrEmpty(veiculoId))
+    {
+        erro = true;
+        Response.Redirect("/");
+
+    }
+    else
+    {
+
+        var db = WebMatrix.Data.Database.Open("dbVeiculos");
+        veiculo = db.QuerySingle("Select v.*, f.Nome 'FabricanteNome' from  Veiculo v inner join Fabricante f on v.Fabricante_Id = f.Id where v.Id = @0", veiculoId);
+        if (veiculo == null)
+        {
+            erro = true;
+            Response.StatusCode = 404;
+            mensagem = "Veículo não encontrado";
+
+        }
+        db.Close();
+    }
+
+
+}
+
+<div>
+    @if (erro)
+    {
+        <h2>@mensagem</h2>
+    }
+    else
+    {
+        <h1>@veiculo.Imagem</h1>
+    }
+
+</div>

@@ -1,0 +1,79 @@
+﻿@{
+    var db = WebMatrix.Data.Database.Open("dbVeiculos");
+    var message = "";
+    var fabricantes = db.Query("SELECT * FROM FABRICANTE");
+    if (IsPost)
+    {
+        try
+        {
+            string nome, modelo, ano, imagem, precoMedio,fabricante;
+            nome = Request.Form["Nome"];
+            modelo = Request.Form["Modelo"];
+            fabricante = Request.Form["Fabricante_id"];
+            ano = Request.Form["Ano"];
+            imagem = Request.Form["Imagem"];
+            precoMedio = Request.Form["PrecoMedio"];
+            var preco = 0.0;
+            preco = Convert.ToDouble(precoMedio);
+            var resultado = db.Execute("INSERT INTO VEICULO(Nome,Modelo,Fabricante_id,Ano,Imagem,PrecoMedio)values(@0,@1,@2,@3,@4,@5)", nome, modelo, fabricante, ano, imagem, precoMedio);
+            if (resultado==0)
+            {
+                message = "Ocorreu um erro, tente novamente.";
+            }
+            else
+            {
+                Response.Redirect("/");
+            }
+        }
+        catch (Exception e)
+        {
+            message = "Ocorreu um erro, tente novamente.";
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+<body>
+<p>@message</p>
+<form method="post" action="CadastroVeiculo.cshtml">
+    <div>
+        <label>Nome:</label>
+        <input type="text" value="@Request.Form["Nome"]" name="Nome"/>
+    </div>
+    <div>
+        <label>Modelo:</label>
+        <input type="text" value="" name="Modelo"/>
+    </div>
+    <div>
+        <label>Fabricante:</label>
+    </div>
+    <div>
+        <label>Fabricante:</label>
+        <select name="Fabricante_Id">
+            @foreach (var fabricante in fabricantes)
+            {
+                <option value="@fabricante.Id">@fabricante.Nome</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label>Ano:</label>
+        <input type="text" value="" name="Ano"/>
+    </div>
+    <div>
+        <label>Imagem:</label>
+        <input type="text" value="" name="Imagem"/>
+    </div>
+    <div>
+        <label>Preço Médio:</label>
+        <input type="text" value="" name="PrecoMedio"/>
+    </div>
+    <div>
+        <button type="submit">Enviar</button>
+    </div>
+</form>
+</body>
+</html>
