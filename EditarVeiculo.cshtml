@@ -54,6 +54,15 @@
             precoMedio = Request.Form["PrecoMedio"];
             var preco = 0.0;
             preco = Convert.ToDouble(precoMedio);
+            var result = db.Execute("UPDATE Veiculo set nome = @0, modelo = @1, Fabricante_Id = @2, Ano = @3, Imagem = @4, PrecoMedio = @5 WHERE Id = @6", nome, modelo, fabricante, ano, imagem, preco, Id);
+            if (result == 0)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                Response.Redirect("/");
+            }
         }
         catch (Exception e)
         {
