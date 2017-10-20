@@ -9,7 +9,7 @@
     Validation.RequireField("Ano", "Ano é obrigatório!");
     Validation.RequireField("Imagem", "Imagem é obrigatório!");
     Validation.RequireField("PrecoMedio", "Preço Médio é obrigatório!");
-    if (IsPost)
+    if (IsPost && Validation.IsValid())
     {
         try
         {
