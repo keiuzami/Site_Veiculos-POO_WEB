@@ -2,6 +2,13 @@
     var db = WebMatrix.Data.Database.Open("dbVeiculos");
     var message = "";
     var fabricantes = db.Query("SELECT * FROM FABRICANTE");
+    Validation.RequireField("Nome", "Nome é obrigatório!");
+    Validation.RequireField("Modelo", "Modelo é obrigatório!");
+    Validation.RequireField("Fabricante_Id", "Fabricane é obrigatório!");
+    Validation.RequireField("Fabricante_Id", "Fabricane é obrigatório!");
+    Validation.RequireField("Ano", "Ano é obrigatório!");
+    Validation.RequireField("Imagem", "Imagem é obrigatório!");
+    Validation.RequireField("PrecoMedio", "Preço Médio é obrigatório!");
     if (IsPost)
     {
         try
@@ -37,6 +44,7 @@
         <title></title>
     </head>
 <body>
+@Html.ValidationSummary()
 <p>@message</p>
 <form method="post" action="CadastroVeiculo.cshtml">
     <div>
