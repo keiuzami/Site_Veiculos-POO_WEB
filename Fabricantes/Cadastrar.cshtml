@@ -1,0 +1,41 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    Validation.RequireField("Nome");
+    Validation.Add("Nome", Validator.StringLength(80, 2));
+
+    var fabricante = new FabricanteViewModel(Request.Form);
+
+    int result = 1;
+
+    if (IsPost && Validation.IsValid())
+    {
+        var db = Database.Open("dbSiteVeiculos");
+
+        result = db.Execute("insert into Fabricante (Nome) values (@0)", Request.Form["Nome"]);
+
+        if (result == 1)
+        {
+            Response.Redirect("~/Fabricantes/Index.cshtml");
+        }
+
+        db.Close();
+    }
+}
+
+<div>
+
+    @if (result == 0)
+    {
+        <div class="alert alert-danger">
+            Ocorreu um erro ao tentar cadastrar. <br />
+            Tente novamente mais tarde.
+        </div>
+    }
+
+    @RenderPage("~/Fabricantes/_Form.cshtml", new { fabricante })
+
+
+</div>

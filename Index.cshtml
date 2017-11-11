@@ -1,52 +1,12 @@
 ﻿@{
+    Page.Title = "O título é inserido aqui";
     Layout = "_Layout.cshtml";
-    Page.Title = "Bem vindo a Concessionária Fulano";
-
-    var db = WebMatrix.Data.Database.Open("dbVeiculos");
-    var veiculos = db.Query(@"Select v.*, f.Nome as 'FabricanteNome' from  Veiculo v 
-inner join Fabricante f on v.Fabricante_Id = f.Id");
+    if (IsPost)
+    {
+        Session.Abandon();
+        Response.Redirect("~/login.cshtml");
+    }
 }
-<table border="1">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Modelo</th>
-            <th>Fabricante</th>
-            <th>Ano</th>
-            <th>Preço FIP</th>
-        </tr>
-    </thead>
-    <tbody>
-                @foreach (var carro in veiculos)
-                {
-
-                    <tr>
-                        <td>@carro.Nome</td>
-
-
-                        <td>@carro.Modelo</td>
-
-
-                        <td>@carro.FabricanteNome</td>
-
-
-                        <td>@carro.Ano</td>
-
-
-
-                        <td>@carro.PrecoMedio</td>
-
-                        <td><a href="VeiculoDetalhe?Id=@carro.Id">Detalhes </a></td>
-                    </tr>  
-
-        
-
-
-        }
-      
-    </tbody>
-
-
-
-
-    </table>
+<div>
+    
+</div>

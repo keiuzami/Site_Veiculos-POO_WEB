@@ -1,0 +1,69 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    Validation.RequireFields("Nome", "Modelo", "Ano", "Imagem", "Fabricante_Id", "PrecoMedio");
+    Validation.Add("Nome", Validator.StringLength(80, 2));
+    Validation.Add("Modelo", Validator.StringLength(80, 2));
+    Validation.Add("Imagem", Validator.StringLength(80, 2));
+    Validation.Add("Ano", Validator.Integer());
+    Validation.Add("Fabricante_Id", Validator.Integer());
+    Validation.Add("PrecoMedio", Validator.Decimal());
+
+    int result = 1;
+
+    /*
+    * No GET é iniciado com valores default pq Request.Form estára vazio
+    * No POST é iniciado com os valores informados pelo usuário e, caso a
+    * validação falhe os dados são retornados para os campos do formulário
+    * assim o usuário poderá realizar as devidas correções
+    */
+    var veiculo = new VeiculoViewModel(Request.Form);
+
+    var db = Database.Open("dbSiteVeiculos");
+
+    var listaFabricantes = db.Query("select * from Fabricante");
+
+    if (IsPost && Validation.IsValid())
+    {
+        result = db.Execute(@"update Veiculo set 
+            Nome = @0, Modelo = @1, Imagem = @2, Ano = @3, Fabricante_Id = @4, PrecoMedio = @5
+            where Id = @6", 
+            veiculo.Nome, veiculo.Modelo, veiculo.Imagem, veiculo.Ano,
+            veiculo.Fabricante_Id, veiculo.PrecoMedio, veiculo.Id);
+
+        if (result == 1)
+        {
+            Response.Redirect("~/Veiculos/Index.cshtml");
+        }
+
+    }
+    else if (!IsPost)
+    {
+        if (Request.QueryString["veiculo_id"].IsEmpty())
+        {
+            Response.Redirect("~/Veiculos/Index.cshtml");
+        }
+
+        var _veiculo = db.QuerySingle("select * from Veiculo where id = @0", Request.QueryString["veiculo_id"]);
+        veiculo = new VeiculoViewModel(_veiculo);
+    }
+
+    db.Close();
+}
+
+<div>
+
+    @if (result == 0)
+    {
+        <div class="alert alert-danger">
+            Ocorreu um erro ao tentar cadastrar. <br />
+            Tente novamente mais tarde.
+        </div>
+    }
+
+    @RenderPage("~/Veiculos/_Form.cshtml", new { veiculo, listaFabricantes })
+
+
+</div>

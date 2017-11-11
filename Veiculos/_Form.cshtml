@@ -1,0 +1,65 @@
+﻿@Html.ValidationSummary(new { @class = "alert alert-danger" })
+
+<form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+    <input type="hidden" name="Id" value="@Page.veiculo.Id" />
+    
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Nome</label>
+        <div class="col-md-9 col-sm-9">
+            <input type="text" name="Nome" value="@Page.veiculo.Nome" class="form-control" />
+            @Html.ValidationMessage("Nome")
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Modelo</label>
+        <div class="col-md-9 col-sm-9">
+            <input type="text" name="Modelo" value="@Page.veiculo.Modelo" class="form-control" />
+            @Html.ValidationMessage("Modelo")
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Ano</label>
+        <div class="col-md-4 col-sm-4">
+            <input type="text" name="Ano" value="@Page.veiculo.Ano" class="form-control" />
+            @Html.ValidationMessage("Ano")
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Fabricante</label>
+        <div class="col-md-4 col-sm-4">
+               <select name="Fabricante_Id" class="form-control">
+                <option value="">--Escolha--</option>
+                @foreach (var f in Page.listaFabricantes)
+                {
+                    <option value="@f.Id" @(Page.veiculo.Fabricante_Id == f.Id ? "selected" : "")>@f.Nome</option>
+                }
+            </select>
+            @Html.ValidationMessage("Fabricante_Id")
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Imagem</label>
+        <div class="col-md-9 col-sm-9">
+            <input type="file" name="Imagem" class="form-control" />
+            @*
+                <input type="text" name="Imagem" value="@Page.veiculo.Imagem" class="form-control" />
+                @Html.ValidationMessage("Imagem")
+            *@
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3">Preco Médio</label>
+        <div class="col-md-9 col-sm-9">
+            <input type="text" name="PrecoMedio" value="@Page.veiculo.PrecoMedio" class="form-control" />
+            @Html.ValidationMessage("PrecoMedio")
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+
+</form>

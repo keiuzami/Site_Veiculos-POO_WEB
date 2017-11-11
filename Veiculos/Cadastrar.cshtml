@@ -1,0 +1,67 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    Validation.RequireFields("Nome", "Modelo", "Ano", "Fabricante_Id", "PrecoMedio");
+    Validation.Add("Nome", Validator.StringLength(80, 2));
+    Validation.Add("Modelo", Validator.StringLength(80, 2));
+    //Validation.Add("Imagem", Validator.StringLength(80, 2));
+    Validation.Add("Ano", Validator.Integer());
+    Validation.Add("Fabricante_Id", Validator.Integer());
+    Validation.Add("PrecoMedio", Validator.Decimal());
+
+    var veiculo = new VeiculoViewModel(Request.Form);
+
+    int result = 1;
+
+    var db = Database.Open("dbSiteVeiculos");
+
+    var listaFabricantes = db.Query("select * from Fabricante");
+
+    if (IsPost && Validation.IsValid())
+    {
+        var imagem = Request.Files["Imagem"];
+        var uploadPath = "~/Uploads/";
+
+        if (imagem != null && imagem.ContentLength > 0)
+        {
+            var novoNome = Guid.NewGuid();
+            var ext = Path.GetExtension(imagem.FileName);
+            var caminhoRelativo = uploadPath + novoNome + ext;
+            var caminhoUpload = Server.MapPath(caminhoRelativo);
+
+            imagem.SaveAs(caminhoUpload);
+
+            veiculo.Imagem = caminhoRelativo;
+        }
+
+        result = db.Execute(@"insert into Veiculo 
+            (Nome, Modelo, Ano, Fabricante_Id, Imagem, PrecoMedio) 
+            values (@0, @1, @2, @3, @4, @5)",
+            veiculo.Nome, veiculo.Modelo, veiculo.Ano, veiculo.Fabricante_Id, veiculo.Imagem, veiculo.PrecoMedio);
+
+        if (result == 1)
+        {
+            Response.Redirect("~/Veiculos/Index.cshtml");
+        }
+
+    }
+
+    db.Close();
+}
+
+<div>
+
+    @if (result == 0)
+    {
+        <div class="alert alert-danger">
+            Ocorreu um erro ao tentar cadastrar. <br />
+            Tente novamente mais tarde.
+        </div>
+    }
+
+    @RenderPage("~/Veiculos/_Form.cshtml", new { veiculo, listaFabricantes })
+
+
+</div>

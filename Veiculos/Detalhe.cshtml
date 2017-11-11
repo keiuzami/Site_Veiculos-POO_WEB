@@ -1,0 +1,46 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    var veiculo = new VeiculoViewModel();
+
+    if (!Request.QueryString["veiculo_id"].IsEmpty())
+    {
+        var db = Database.Open("dbSiteVeiculos");
+
+        var _veiculo = db.QuerySingle(
+        @"select Veiculo.*, Fabricante.Nome as 'FabricanteNome' from Veiculo 
+        join Fabricante on Fabricante.Id = Veiculo.Fabricante_Id
+        where Veiculo.Id = @0", Request.QueryString["veiculo_id"]);
+
+        veiculo = new VeiculoViewModel(_veiculo);
+
+        db.Close();
+    }
+    else
+    {
+        Response.Redirect("~/Veiculos/Index.cshtml");
+    }
+
+
+}
+
+<div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>@veiculo.Nome</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="@Href(veiculo.Imagem)" class="img-responsive" />
+                </div>
+                <div class="col-md-6">
+                    <p>Modelo: @veiculo.Modelo</p>
+                    <p>Ano: @veiculo.Ano</p>
+                    <p>Fabricante: @veiculo.FabricanteNome</p>
+                    <p>Preço Médio: @veiculo.PrecoMedio.Value.ToString("C")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

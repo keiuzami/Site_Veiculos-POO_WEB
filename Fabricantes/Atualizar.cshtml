@@ -1,0 +1,58 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    Validation.RequireField("Nome");
+    Validation.Add("Nome", Validator.StringLength(80, 5));
+
+    int result = 1;
+
+    /*
+    * No GET é iniciado com valores default pq Request.Form estára vazio
+    * No POST é iniciado com os valores informados pelo usuário e, caso a
+    * validação falhe os dados são retornados para os campos do formulário
+    * assim o usuário poderá realizar as devidas correções
+    */
+    var fabricante = new FabricanteViewModel(Request.Form);
+
+    var db = Database.Open("dbSiteVeiculos");
+
+    if (IsPost && Validation.IsValid())
+    {
+        result = db.Execute("update Fabricante set Nome = @0 where Id = @1", Request.Form["Nome"], Request.Form["Id"]);
+
+        if (result == 1)
+        {
+            Response.Redirect("~/Fabricantes/Index.cshtml");
+        }
+
+    }
+    else if (!IsPost)
+    {
+        if (Request.QueryString["fabricante_id"].IsEmpty())
+        {
+            Response.Redirect("~/Fabricantes/Index.cshtml");
+        }
+
+        var _fabricante = db.QuerySingle("select * from Fabricante where id = @0", Request.QueryString["fabricante_id"]);
+        fabricante = new FabricanteViewModel(_fabricante);
+    }
+
+    db.Close();
+}
+
+<div>
+
+    @if (result == 0)
+    {
+        <div class="alert alert-danger">
+            Ocorreu um erro ao tentar cadastrar. <br />
+            Tente novamente mais tarde.
+        </div>
+    }
+
+    @RenderPage("~/Fabricantes/_Form.cshtml", new { fabricante })
+
+
+</div>

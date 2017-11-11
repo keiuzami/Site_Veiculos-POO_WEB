@@ -1,12 +1,71 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    var usuario = Session["usuario"] as UsuarioViewModel;
+    if (usuario == null)
+    {
+        Response.Redirect("~/Login.cshtml");
+    }
+}
+<!DOCTYPE html>
 <html>
     <head>
-        <title>@Page.Title</title>
+        <title>BEM VINDO @usuario.Nome</title>
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
         @RenderSection("head", required: false)
+        <style>
+            .field-validation-error {
+                color: #b94a48;
+            }
+
+            .field-validation-valid {
+                display: none;
+            }
+
+            input.input-validation-error {
+                border: 1px solid #b94a48;
+            }
+
+
+            select.input-validation-error {
+                border: 1px solid #b94a48;
+            }
+
+            input[type="checkbox"].input-validation-error {
+                border: 0 none;
+            }
+
+            .validation-summary-errors {
+                color: #b94a48;
+            }
+
+            .validation-summary-valid {
+                display: none;
+            }
+        </style>
     </head>
     <body>
-        <h1>@Page.Title</h1>
-        @RenderBody()
-        <p>Todos os direitos reservados</p>
+        <form action="~/Index.cshtml" method="post">
+            <button type="submit" class="btn btn-danger">SOU UM FRACO</button>
+        </form>
+        <div class="container">
+            <header>
+                <h1>Site Veículos</h1>
+                <ul>
+                    <li>
+                        <a href="~/Fabricantes/Index.cshtml">Fabricantes</a>
+                    </li>
+                    <li>
+                        <a href="~/Veiculos/Index.cshtml">Veiculos</a>
+                    </li>
+                </ul>
+            </header>
+            <section>
+                @RenderBody()
+            </section>
+            <footer>
+                Todos os direitos reservados
+            </footer>
+        </div>
+        
     </body>
 </html>

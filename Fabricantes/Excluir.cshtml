@@ -1,0 +1,58 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "O título é inserido aqui";
+    Layout = "~/_Layout.cshtml";
+
+    var erro = false;
+    string msgErro = "";
+
+    if (IsPost && !Request.Form["Id"].IsEmpty())
+    {
+
+        var db = Database.Open("dbSiteVeiculos");
+
+        try
+        {
+            int result = db.Execute("delete from Fabricante where Id = @0", Request.Form["Id"].AsInt());
+
+            if (result == 1)
+            {
+                Response.Redirect("~/Fabricantes/Index.cshtml");
+            }
+            else
+            {
+                erro = true;
+            }
+        }
+        catch (System.Data.SqlClient.SqlException ex)
+        {
+            erro = true;
+            msgErro = ex.Message;
+        }
+
+        db.Close();
+    }
+
+}
+
+<div>
+    @if (erro)
+    {
+        <h2>Ocorreu um erro.</h2>
+        <small>@msgErro</small>
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal">
+            
+            <input type="hidden" name="Id" value="@Request.QueryString["fabricante_id"]" />
+            
+            <h4>Tem certeza que deseja Excluir este item?</h4>
+
+            <button type="submit" class="btn btn-primary">OK</button>
+            <a href="~/Fabricantes/Index.cshtml" class="btn btn-default">Voltar</a>
+        </form>
+    </div>
+</div>
