@@ -1,8 +1,11 @@
 ﻿@using WebMatrix.Data
 @{
+    int result = 0;
+    Validation.RequireField("email");
+    Validation.RequireField("senha");
     Page.Title = "Login";
     var db = Database.Open("dbSiteVeiculos");
-    if (IsPost)
+    if (IsPost && Validation.IsValid())
     {
         var email = Request.Form["email"];
         var senha = Request.Form["senha"];
@@ -15,59 +18,24 @@
                 {
                     Email = usuario.email,
                     Nome = usuario.nome
-                };                
+                };
                 Response.Redirect("index.cshtml");
             }
+            else
+            {
+                result = 1;
+            }
+        }
+        else
+        {
+            result = 1;
         }
     }
-    //Validation.RequireFields("Nome", "Modelo", "Ano", "Imagem", "Fabricante_Id", "PrecoMedio");
-    //Validation.Add("Nome", Validator.StringLength(80, 2));
-    //Validation.Add("Modelo", Validator.StringLength(80, 2));
-    //Validation.Add("Imagem", Validator.StringLength(80, 2));
-    //Validation.Add("Ano", Validator.Integer());
-    //Validation.Add("Fabricante_Id", Validator.Integer());
-    //Validation.Add("PrecoMedio", Validator.Decimal());
+    else if(IsPost && !Validation.IsValid())
+    {
+        result = 2;
+    }
 
-    //int result = 1;
-
-    /*
-    * No GET é iniciado com valores default pq Request.Form estára vazio
-    * No POST é iniciado com os valores informados pelo usuário e, caso a
-    * validação falhe os dados são retornados para os campos do formulário
-    * assim o usuário poderá realizar as devidas correções
-    */
-    //var veiculo = new VeiculoViewModel(Request.Form);
-
-    //
-
-    //var listaFabricantes = db.Query("select * from Fabricante");
-
-    //if (IsPost && Validation.IsValid())
-    //{
-    //    result = db.Execute(@"update Veiculo set 
-    //        Nome = @0, Modelo = @1, Imagem = @2, Ano = @3, Fabricante_Id = @4, PrecoMedio = @5
-    //        where Id = @6", 
-    //        veiculo.Nome, veiculo.Modelo, veiculo.Imagem, veiculo.Ano,
-    //        veiculo.Fabricante_Id, veiculo.PrecoMedio, veiculo.Id);
-
-    //    if (result == 1)
-    //    {
-    //        Response.Redirect("~/Veiculos/Index.cshtml");
-    //    }
-
-    //}
-    //else if (!IsPost)
-    //{
-    //    if (Request.QueryString["veiculo_id"].IsEmpty())
-    //    {
-    //        Response.Redirect("~/Veiculos/Index.cshtml");
-    //    }
-
-    //    var _veiculo = db.QuerySingle("select * from Veiculo where id = @0", Request.QueryString["veiculo_id"]);
-    //    veiculo = new VeiculoViewModel(_veiculo);
-    //}
-
-    //db.Close();
 }
 <html>
 <head>
@@ -114,7 +82,23 @@
     <br />
     <br />
     <br />
-
+    @switch (result)
+    {
+        case 0:
+            break;
+        case 1:
+            <div class="alert alert-danger col-sm-4 col-sm-offset-4">
+                Email ou senha incorretos! <br />
+            </div>
+            break;
+        case 2:
+            <div class="alert alert-danger col-sm-4 col-sm-offset-4">
+                Todos os campos precisam ser preenchidos! <br />
+            </div>
+            break;
+        default:
+            break;
+    }
     <form action="~/login.cshtml" class="col-lg-4 col-lg-offset-4" method="post">
         <div class="form-group">
             <label>Email</label>
